@@ -1,21 +1,12 @@
-const { token, isLocked, isAuthed, keyMatches } = require('./_auth');
+const crypto = require('node:crypto');
 
-module.exports = (req, res) => {
-  if (!isLocked()) return res.status(200).json({ locked: false, authed: true });
-
-  if (req.method === 'POST') {
-    const key = req.body && req.body.key;
-    if (!keyMatches(key)) return res.status(401).json({ locked: true, authed: false });
-    res.setHeader(
-      'Set-Cookie',
-      'lf=' + token() + '; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000'
-    );
-    return res.status(200).json({ locked: true, authed: true });
-  }
-
-  return res.status(200).json({ locked: true, authed: isAuthed(req) });
-};
-
+// Optional access key: if ACCESS_KEY is set in Vercel, visitors must enter it.
+function isAuthed(req) {
+  if (!process.env.ACCESS_KEY) return true;
+  const token = crypto.createHash('sha256').update('linkframe:' + process.env.ACCESS_KEY).digest('hex');
+  const m = /(?:^|;\s*)lf=([^;]+)/.exec(req.headers.cookie || '');
+  return Boolean(m) && m[1] === token;
+}
 const dns = require('node:dns').promises;
 const net = require('node:net');
 
