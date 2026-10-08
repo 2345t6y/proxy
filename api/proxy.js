@@ -18,7 +18,6 @@ module.exports = (req, res) => {
 
 const dns = require('node:dns').promises;
 const net = require('node:net');
-const { isAuthed } = require('./_auth');
 
 const P = '/api/proxy?url=';
 
