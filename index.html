@@ -130,7 +130,7 @@
     if (!v) return "";
     if (/^https?:\/\//i.test(v)) return v;
     if (/^[^\s/]+\.[a-z]{2,}([/:?#].*)?$/i.test(v) || /^localhost(:\d+)?([/?#].*)?$/i.test(v)) return "https://" + v;
-    return "https://html.duckduckgo.com/html/?q=" + encodeURIComponent(v);
+      return "https://www.google.com/search?q=" + encodeURIComponent(v);
   }
 
   function remember(u) {
